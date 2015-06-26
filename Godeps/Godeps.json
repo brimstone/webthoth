@@ -1,0 +1,5 @@
+{
+	"ImportPath": "github.com/brimstone/webthoth",
+	"GoVersion": "go1.4.2",
+	"Deps": []
+}
