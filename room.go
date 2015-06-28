@@ -20,6 +20,10 @@ func NewRoom() Room {
 func (r Room) ListDescriptions() []string {
 	offers := make([]string, 0)
 	for k, _ := range r.Descriptions {
+		if time.Since(r.Descriptions[k].Age) > time.Minute {
+			delete(r.Descriptions, k)
+			continue
+		}
 		offers = append(offers, k)
 	}
 	return offers
@@ -44,6 +48,10 @@ func (r Room) GetDescription(key string) (string, error) {
 	var offer Description
 	var ok bool
 	if offer, ok = r.Descriptions[key]; !ok {
+		return "", fmt.Errorf("Key not found")
+	}
+	if time.Since(offer.Age) > time.Minute {
+		delete(r.Descriptions, key)
 		return "", fmt.Errorf("Key not found")
 	}
 	if offer.State == Answer {
