@@ -29,6 +29,9 @@ func roomFunc(res http.ResponseWriter, req *http.Request) {
 		id = r[3]
 	}
 	log.Println("handling room", roomid, id)
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Registry-Auth")
+	res.Header().Add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
 	// new means we're looking for an offer
 	if id == "" {
 		// List Description IDs for this room, if any
