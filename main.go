@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -33,17 +34,19 @@ func roomFunc(res http.ResponseWriter, req *http.Request) {
 		// List Description IDs for this room, if any
 		if req.Method == "GET" {
 			if _, ok := rooms[roomid]; !ok {
+				res.Header().Set("Content-Type", "application/json")
 				fmt.Fprint(res, "[]")
 				return
 			}
-			fmt.Fprintln(res, rooms[roomid].ListDescriptions()[0])
+			output, _ := json.Marshal(rooms[roomid].ListDescriptions())
+			res.Header().Set("Content-Type", "application/json")
+			fmt.Fprintln(res, string(output))
 			// Add a description ID to this room, return the ID
 		} else if req.Method == "POST" {
 			if _, ok := rooms[roomid]; !ok {
 				rooms[roomid] = NewRoom()
 			}
 			payload, err := ioutil.ReadAll(req.Body)
-			log.Println("Payload", string(payload))
 			if err != nil {
 				fmt.Fprint(res, "Got error", err)
 				return
